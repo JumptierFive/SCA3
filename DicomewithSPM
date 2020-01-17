@@ -1,0 +1,43 @@
+%% dicome to nii
+clear;
+clc;
+rootDir='K:\ALLFILES\DATA\SWHospt\1_T1ForSCA\';
+allFile=filename_list([rootDir,'RawData\T1Raw'],'*0*');
+
+for subid=1:41%:length(allFile)/2
+    T1file = filename_list(allFile{subid+41},'*');
+    T1file = T1file(3:end);
+    outputfile=[rootDir,'Processed\try\SCA\Sub',dec2base(subid,10,2)];
+    if exist(outputfile)==7
+       rmdir(outputfile);
+    end
+        mkdir(outputfile);
+    matlabbatch{1}.spm.util.import.dicom.data = T1file;
+    matlabbatch{1}.spm.util.import.dicom.root = 'flat';
+    matlabbatch{1}.spm.util.import.dicom.outdir = {outputfile};
+    matlabbatch{1}.spm.util.import.dicom.protfilter = '.*';
+    matlabbatch{1}.spm.util.import.dicom.convopts.format = 'nii';
+    matlabbatch{1}.spm.util.import.dicom.convopts.meta = 0;
+    matlabbatch{1}.spm.util.import.dicom.convopts.icedims = 0;
+    spm_jobman('run',matlabbatch);
+    clear matlabbatch;
+end
+% 
+% for subid=1:1:length(allFile)/2
+%     T1file = filename_list(allFile{subid+41},'*');
+%     T1file = T1file(3:end);
+%     outputfile=[rootDir,'Processed\Control\Sub',dec2base(subid,10,2)];
+%     if exist(outputfile)==7
+%         rmdir(outputfile);
+%     end
+%         mkdir(outputfile);
+%     matlabbatch{1}.spm.util.import.dicom.data = T1file;
+%     matlabbatch{1}.spm.util.import.dicom.root = 'flat';
+%     matlabbatch{1}.spm.util.import.dicom.outdir = {outputfile};
+%     matlabbatch{1}.spm.util.import.dicom.protfilter = '.*';
+%     matlabbatch{1}.spm.util.import.dicom.convopts.format = 'nii';
+%     matlabbatch{1}.spm.util.import.dicom.convopts.meta = 0;
+%     matlabbatch{1}.spm.util.import.dicom.convopts.icedims = 0;
+%     spm_jobman('run',matlabbatch);
+%     clear matlabbatch;
+% end
